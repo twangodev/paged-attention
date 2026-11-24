@@ -1,0 +1,4 @@
+build/
+*.o
+*.nsys-rep
+*.ncu-rep
