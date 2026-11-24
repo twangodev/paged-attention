@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
+
+include(cmake/ConfigureCUDA.cmake)
+
 project(paged_attention LANGUAGES CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 17)
