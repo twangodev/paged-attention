@@ -1,4 +1,66 @@
-build/
+# Build directories and generated CMake files
+[Bb]uild/
+[Bb]uild-*/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CMakeLists.txt.user*
+CMakeUserPresets.json
+CTestTestfile.cmake
+Testing/
+_deps/
+cmake_install.cmake
+install_manifest*.txt
+compile_commands.json
+build.ninja
+rules.ninja
+.ninja_deps
+.ninja_log
+vcpkg_installed/
+
+# C++ compiler, linker, and debugger output
+*.d
+*.slo
+*.lo
 *.o
+*.obj
+*.gch
+*.pch
+*.ilk
+*.pdb
+*.dwo
+*.dSYM/
+*.so
+*.so.*
+*.dylib
+*.dll
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app/
+
+# CUDA compiler intermediates and device binaries
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+
+# NVIDIA Nsight reports and exports
 *.nsys-rep
 *.ncu-rep
+*.qdrep
+*.qdstrm
+
+# Local CLion metadata and temporary files
+/.idea/
+.cache/
+*.tmp
+*.log
+*.bak
+*.swp
