@@ -17,14 +17,15 @@ __global__ void attention_kernel(const float* q, const float* k_cache, const flo
     int r = blockIdx.y;  // request
     int len = seq_lens[r];
 
-    size_t chunk = (size_t)r * max_seq_len * num_heads * head_dim;
+    const size_t chunk = static_cast<size_t>(r) * max_seq_len * num_heads * head_dim;
     const float* k = k_cache + chunk;
     const float* v = v_cache + chunk;
     const float* q_row = q + (r * num_heads + h) * head_dim;
     float* out_row = out + (r * num_heads + h) * head_dim;
 
     extern __shared__ float scores[];
-    float norm = 1.0f / sqrtf(head_dim);
+    const auto head_dimf = static_cast<float>(head_dim);
+    const float norm = 1.0f / sqrtf(head_dimf);
 
     // attention scores calc
     float m = -INFINITY;
