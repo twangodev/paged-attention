@@ -10,7 +10,7 @@ using namespace std;
 static int failures = 0;
 
 // Prints ok/FAIL. Fails if any got[i] is more than 1e-5 away from want[i] (NaN fails too).
-static void expect_close(const char* name, const float* got, const float* want, int n) {
+static void expect_close(const char *name, const float *got, const float *want, int n) {
     for (int i = 0; i < n; i++) {
         if (!(fabs(got[i] - want[i]) <= 1e-5f)) {
             printf("FAIL %s: index %d got %f want %f\n", name, i, got[i], want[i]);
@@ -26,12 +26,16 @@ static void expect_close(const char* name, const float* got, const float* want, 
 // Each v is one-hot, so out is just those three weights.
 static void test_hand_example() {
     float q[] = {1, 1, 0, 0};
-    float k[] = {1, 1, 0, 0,
-                 0, 0, 1, 1,
-                 1, 0, 0, 0};
-    float v[] = {1, 0, 0, 0,
-                 0, 1, 0, 0,
-                 0, 0, 1, 0};
+    float k[] = {
+        1, 1, 0, 0,
+        0, 0, 1, 1,
+        1, 0, 0, 0
+    };
+    float v[] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0
+    };
     float want[] = {0.506480f, 0.186324f, 0.307196f, 0.0f};
     float out[4];
     attention_cpu(q, k, v, out, 3, 1, 4);
@@ -45,9 +49,9 @@ static void test_big_score() {
     mt19937 rng(0);
     uniform_real_distribution<float> dist(-1, 1);
     vector<float> q(H * D), k(S * H * D), v(S * H * D), out(H * D);
-    for (float& x : q) x = dist(rng);
-    for (float& x : k) x = dist(rng);
-    for (float& x : v) x = dist(rng);
+    for (float &x: q) x = dist(rng);
+    for (float &x: k) x = dist(rng);
+    for (float &x: v) x = dist(rng);
     for (int i = 0; i < H * D; i++) k[winner * H * D + i] = 100 * q[i];
 
     attention_cpu(q.data(), k.data(), v.data(), out.data(), S, H, D);

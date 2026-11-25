@@ -20,9 +20,9 @@ static void check(cudaError_t err) {
 
 // Makes room on the GPU, copies a CPU vector into it, and returns the GPU pointer.
 // (template = works for vector<float> and vector<int> alike)
-template <typename T>
-static T* to_gpu(const vector<T>& x) {
-    T* dev;
+template<typename T>
+static T *to_gpu(const vector<T> &x) {
+    T *dev;
     check(cudaMalloc(&dev, x.size() * sizeof(T)));
     check(cudaMemcpy(dev, x.data(), x.size() * sizeof(T), cudaMemcpyHostToDevice));
     return dev;
@@ -30,16 +30,16 @@ static T* to_gpu(const vector<T>& x) {
 
 int main() {
     const int H = 4, D = 64, max_len = 300;
-    vector<int> lens = {1, 300, 129, 77, 256};  // includes 1, max_len, and just over 128
+    vector<int> lens = {1, 300, 129, 77, 256}; // includes 1, max_len, and just over 128
     const int S = lens.size();
-    const int chunk = max_len * H * D;          // floats per request in the cache
+    const int chunk = max_len * H * D; // floats per request in the cache
 
     // Random q and cache. Unused cache slots (t >= lens[s]) are NaN, so if the
     // kernel ever reads one, its answer turns into NaN and the test fails.
     mt19937 rng(0);
     uniform_real_distribution<float> dist(-1, 1);
     vector<float> q(S * H * D), k(S * chunk, NAN), v(S * chunk, NAN);
-    for (float& x : q) x = dist(rng);
+    for (float &x: q) x = dist(rng);
     for (int s = 0; s < S; s++) {
         for (int i = 0; i < lens[s] * H * D; i++) {
             k[s * chunk + i] = dist(rng);
@@ -48,16 +48,16 @@ int main() {
     }
 
     // GPU: copy in, run, copy out.
-    float* q_d = to_gpu(q);
-    float* k_d = to_gpu(k);
-    float* v_d = to_gpu(v);
-    int* lens_d = to_gpu(lens);
-    float* out_d;
+    float *q_d = to_gpu(q);
+    float *k_d = to_gpu(k);
+    float *v_d = to_gpu(v);
+    int *lens_d = to_gpu(lens);
+    float *out_d;
     check(cudaMalloc(&out_d, S * H * D * sizeof(float)));
 
     attention_gpu(q_d, k_d, v_d, lens_d, out_d, S, max_len, H, D);
-    check(cudaGetLastError());       // did the launch work?
-    check(cudaDeviceSynchronize());  // wait for the kernel to finish; did it crash?
+    check(cudaGetLastError()); // did the launch work?
+    check(cudaDeviceSynchronize()); // wait for the kernel to finish; did it crash?
 
     vector<float> got(S * H * D);
     check(cudaMemcpy(got.data(), out_d, got.size() * sizeof(float), cudaMemcpyDeviceToHost));

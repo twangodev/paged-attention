@@ -6,7 +6,7 @@
 const int H = 32, D = 128, REPS = 10;
 
 // Average ms per call of run(), after one warmup call
-template <class F>
+template<class F>
 float time_ms(F run) {
     // TODO: time REPS calls with cudaEventRecord / cudaEventElapsedTime
     return 0;
@@ -25,16 +25,16 @@ float time_paged(int batch_size, int seq_len, int block_size) {
 }
 
 // gb_per_s = bytes of k and v read / time
-void print_row(const char* kernel, int batch_size, int seq_len, int block_size, float ms) {
+void print_row(const char *kernel, int batch_size, int seq_len, int block_size, float ms) {
     // TODO
 }
 
 int main() {
     printf("kernel,batch_size,seq_len,block_size,ms,gb_per_s\n");
-    for (int batch_size : {8, 32}) {
-        for (int seq_len : {512, 2048}) {
+    for (int batch_size: {8, 32}) {
+        for (int seq_len: {512, 2048}) {
             print_row("contiguous", batch_size, seq_len, seq_len, time_contiguous(batch_size, seq_len));
-            for (int block_size : {8, 16, 32, 64, 128}) {
+            for (int block_size: {8, 16, 32, 64, 128}) {
                 print_row("paged", batch_size, seq_len, block_size, time_paged(batch_size, seq_len, block_size));
             }
         }

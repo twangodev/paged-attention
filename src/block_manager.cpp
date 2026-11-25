@@ -22,7 +22,7 @@ int BlockManager::seq_len(int req) const {
     return lens[req];
 }
 
-const std::vector<int>& BlockManager::block_table(int req) const {
+const std::vector<int> &BlockManager::block_table(int req) const {
     return tables[req];
 }
 
