@@ -27,7 +27,7 @@ __global__ void attention_kernel(const float* q, const float* k_cache, const flo
     float norm = 1.0f / sqrtf(head_dim);
 
     // attention scores calc
-    int m = -INFINITY;
+    float m = -INFINITY;
     for (int t = 0; t < len; t++) {
         scores[t] = norm * dot(q_row, k + (t*num_heads + h)*head_dim, head_dim);
         m = fmaxf(m, scores[t]);
